@@ -1,90 +1,196 @@
 /* ============================================================
-   CPHQ Session 1 Portal — app logic
+   OMAC CPHQ Preparation Module — app logic
+   Hierarchy: Home (module list) -> Module Home (3 tabs) ->
+              Study Notes / Practice Quiz / Exam Quiz, all scoped
+              to the currently active course module.
    ============================================================ */
 
 // ---------------- View switching ----------------
 function showView(id){
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.topbar nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#module-tabs button').forEach(b => b.classList.remove('active'));
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function goHome(){
-  showView('view-home');
-  document.getElementById('nav-home').classList.add('active');
+let activeModuleId = null;
+
+function activeModule(){
+  return COURSE_MODULES.find(m => m.id === activeModuleId) || COURSE_MODULES[0];
 }
 
-function goNotes(){
+function goHome(){
+  activeModuleId = null;
+  document.getElementById('module-tabs').style.display = 'none';
+  document.getElementById('topbar-subtitle').textContent = 'CPHQ Exam Preparation';
+  showView('view-home');
+  renderModuleCardGrid();
+}
+
+function goModuleHome(moduleId){
+  if (moduleId) activeModuleId = moduleId;
+  const cm = activeModule();
+  document.getElementById('module-tabs').style.display = 'flex';
+  document.getElementById('topbar-subtitle').textContent = courseModuleLabel(cm) + ' \u00b7 ' + cm.blurb;
+  showView('view-module-home');
+  renderModuleHomeView(cm);
+}
+
+function goModuleNotes(){
+  const cm = activeModule();
   showView('view-notes');
-  document.getElementById('nav-notes').classList.add('active');
-  if (notesState.moduleIndex === null){
-    selectModule(0);
+  document.getElementById('tab-notes').classList.add('active');
+  document.getElementById('notes-section-label').textContent = courseModuleLabel(cm) + ' \u00b7 Study Notes';
+  if (notesState.chapterIndex === null || notesState.scopeModuleId !== cm.id){
+    selectChapter(cm, 0);
   } else {
-    renderModuleList();
-    renderNoteCard();
+    renderModuleList(cm);
+    renderNoteCard(cm);
   }
 }
 
-function goQuizHome(){
+function goModulePractice(){
+  const cm = activeModule();
   showView('view-quiz-home');
-  document.getElementById('nav-quiz').classList.add('active');
-  renderCategoryGrid();
+  document.getElementById('tab-quiz').classList.add('active');
+  document.getElementById('quiz-section-label').textContent = courseModuleLabel(cm) + ' \u00b7 Practice Quiz';
+  renderCategoryGrid(cm);
 }
 
-function goExamHome(){
-  showView('view-exam-home');
-  document.getElementById('nav-exam').classList.add('active');
-  renderExamModuleGrid();
+function goModuleExam(){
+  const cm = activeModule();
+  document.getElementById('tab-exam').classList.add('active');
+  startExam(cm);
 }
 
 // ================================================================
-// PROGRESS TRACKING (per module, in-memory for this session)
+// HOME — module card grid
 // ================================================================
-const progress = {};
-NOTES_MODULES.forEach(mod => {
-  progress[mod.id] = { notesDone: false, examPassed: false, examBestPct: null };
-});
+function renderModuleCardGrid(){
+  const grid = document.getElementById('module-card-grid');
+  grid.innerHTML = '';
+  COURSE_MODULES.forEach(cm => {
+    const p = getProgress(cm.id);
+    const chapters = chaptersFor(cm);
+    const examBank = EXAM_BANKS[cm.examBankKey] || [];
+
+    let statusBadge = '';
+    if (p.examPassed) statusBadge = '<span class="mod-badge pass">&#10003; Exam passed</span>';
+    else if (p.notesDone) statusBadge = '<span class="mod-badge ready">Notes complete</span>';
+
+    const card = document.createElement('div');
+    card.className = 'module-card';
+    card.innerHTML = `
+      <div class="module-card-eyebrow">${cm.title}</div>
+      <h3>${cm.name || 'Name coming soon'}</h3>
+      <p>${cm.blurb}</p>
+      <div class="module-card-meta">${chapters.length} note chapters &middot; ${practiceQuestionsFor(cm).length} practice Qs &middot; ${examBank.length} exam Qs</div>
+      ${statusBadge}
+      <div class="cta">Open module <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    `;
+    card.onclick = () => goModuleHome(cm.id);
+    grid.appendChild(card);
+  });
+}
+
+// ================================================================
+// MODULE HOME — overview + 3 entry cards (Notes / Practice / Exam)
+// ================================================================
+function renderModuleHomeView(cm){
+  document.getElementById('module-home-eyebrow').textContent = cm.title;
+  document.getElementById('module-home-title').textContent = cm.name || 'Name coming soon';
+  document.getElementById('module-home-blurb').textContent = cm.blurb;
+
+  const p = getProgress(cm.id);
+  const chapters = chaptersFor(cm);
+  const practiceQs = practiceQuestionsFor(cm);
+  const examBank = EXAM_BANKS[cm.examBankKey] || [];
+
+  const grid = document.getElementById('module-home-grid');
+  grid.innerHTML = `
+    <div class="home-card notes" onclick="goModuleNotes()">
+      <div class="icon">&#128218;</div>
+      <h3>Study Notes</h3>
+      <p>${chapters.length} chapters covering this module's material heading-by-heading.</p>
+      <div class="cta">Start reading <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </div>
+    <div class="home-card quiz" onclick="goModulePractice()">
+      <div class="icon">&#128221;</div>
+      <h3>Practice Quiz</h3>
+      <p>${practiceQs.length} scenario-based MCQs for this module, by category, with instant feedback.</p>
+      <div class="cta">Start quiz <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </div>
+    <div class="home-card exam" onclick="goModuleExam()">
+      <div class="icon">&#127919;</div>
+      <h3>Exam Quiz</h3>
+      <p>${examBank.length} questions &middot; one scored sitting, pass at ${EXAM_PASS_PCT}%. ${p.examPassed ? 'Passed \u2014 best score ' + p.examBestPct + '%.' : (p.notesDone ? 'Ready when you are.' : 'Best after finishing the notes.')}</p>
+      <div class="cta">${p.examPassed ? 'Retake exam' : 'Take exam'} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    </div>
+  `;
+}
+
+// ================================================================
+// PROGRESS TRACKING (per course module, in-memory for this session)
+// ================================================================
+const progressStore = {};
+function getProgress(courseModuleId){
+  if (!progressStore[courseModuleId]){
+    progressStore[courseModuleId] = { notesDone: false, examPassed: false, examBestPct: null };
+  }
+  return progressStore[courseModuleId];
+}
+
+// ================================================================
+// Helpers scoping shared data arrays to a course module
+// ================================================================
+function chaptersFor(cm){
+  return NOTES_MODULES.filter(ch => cm.noteChapterIds.includes(ch.id));
+}
+function practiceQuestionsFor(cm){
+  if (!cm.quizCategories) return QUIZ_QUESTIONS.slice();
+  return QUIZ_QUESTIONS.filter(q => cm.quizCategories.includes(q.category));
+}
+function practiceCategoriesFor(cm){
+  if (!cm.quizCategories) return QUIZ_CATEGORIES.slice();
+  return QUIZ_CATEGORIES.filter(c => cm.quizCategories.includes(c.name));
+}
 
 // ================================================================
 // STUDY NOTES
 // ================================================================
 const notesState = {
-  moduleIndex: null,
+  scopeModuleId: null,  // course module id this state belongs to
+  chapterIndex: null,
   cardIndex: 0
 };
 
-function renderModuleList(){
+function renderModuleList(cm){
+  const chapters = chaptersFor(cm);
   const list = document.getElementById('module-list');
   list.innerHTML = '';
-  NOTES_MODULES.forEach((mod, idx) => {
+  chapters.forEach((chapter, idx) => {
     const div = document.createElement('div');
-    div.className = 'module-item' + (idx === notesState.moduleIndex ? ' active' : '');
-    const progressPct = idx === notesState.moduleIndex
-      ? Math.round(((notesState.cardIndex + 1) / mod.cards.length) * 100)
-      : (progress[mod.id].notesDone ? 100 : 0);
-    const p = progress[mod.id];
-    let badge = '';
-    if (p.examPassed) badge = '<span class="mod-badge pass">&#10003; Exam passed</span>';
-    else if (p.notesDone && EXAM_BANKS[mod.id]) badge = '<span class="mod-badge ready">Exam ready</span>';
-    else if (p.notesDone) badge = '<span class="mod-badge done">Notes complete</span>';
+    div.className = 'module-item' + (idx === notesState.chapterIndex ? ' active' : '');
+    const progressPct = idx === notesState.chapterIndex
+      ? Math.round(((notesState.cardIndex + 1) / chapter.cards.length) * 100)
+      : (idx < notesState.chapterIndex ? 100 : 0);
     div.innerHTML = `
-      <div class="num">MODULE ${idx + 1} OF ${NOTES_MODULES.length}</div>
-      <h4>${mod.title}</h4>
-      <p>${mod.blurb}</p>
-      ${badge}
+      <div class="num">CHAPTER ${idx + 1} OF ${chapters.length}</div>
+      <h4>${chapter.title}</h4>
+      <p>${chapter.blurb}</p>
       <div class="progress-track"><div class="progress-fill" style="width:${progressPct}%"></div></div>
     `;
-    div.onclick = () => selectModule(idx);
+    div.onclick = () => selectChapter(cm, idx);
     list.appendChild(div);
   });
 }
 
-function selectModule(idx){
-  notesState.moduleIndex = idx;
+function selectChapter(cm, idx){
+  notesState.scopeModuleId = cm.id;
+  notesState.chapterIndex = idx;
   notesState.cardIndex = 0;
-  renderModuleList();
-  renderNoteCard();
+  renderModuleList(cm);
+  renderNoteCard(cm);
 }
 
 function renderRunChart(total, currentIdx){
@@ -99,7 +205,6 @@ function renderRunChart(total, currentIdx){
   let points = [];
   for (let i = 0; i < total; i++){
     const x = pad + step * i;
-    // gentle wave trending down (toward "target") to evoke a run chart
     const progressFrac = total > 1 ? i / (total - 1) : 0;
     const y = baseY - progressFrac * (baseY - topY);
     points.push([x, y]);
@@ -124,113 +229,117 @@ function renderRunChart(total, currentIdx){
   `;
 }
 
-function renderNoteCard(){
-  const mod = NOTES_MODULES[notesState.moduleIndex];
-  const card = mod.cards[notesState.cardIndex];
+function renderNoteCard(cm){
+  const chapters = chaptersFor(cm);
+  const chapter = chapters[notesState.chapterIndex];
+  const card = chapter.cards[notesState.cardIndex];
   const panel = document.getElementById('note-panel');
-  const isLastCardOfModule = notesState.cardIndex === mod.cards.length - 1;
-  const isVeryLastCard = isLastCardOfModule && notesState.moduleIndex === NOTES_MODULES.length - 1;
-  const hasExam = !!EXAM_BANKS[mod.id];
+  const isLastCardOfChapter = notesState.cardIndex === chapter.cards.length - 1;
+  const isVeryLastCard = isLastCardOfChapter && notesState.chapterIndex === chapters.length - 1;
+  const hasExam = !!EXAM_BANKS[cm.examBankKey];
 
   let nextLabel = 'Next \u2192';
-  if (isLastCardOfModule && hasExam) nextLabel = 'Finish module \u2192';
-  else if (isVeryLastCard) nextLabel = 'Finish module \u2192';
+  if (isVeryLastCard) nextLabel = 'Finish module \u2192';
 
   panel.innerHTML = `
-    <div class="module-title">Module ${notesState.moduleIndex + 1} &middot; ${mod.title}</div>
+    <div class="module-title">${courseModuleLabel(cm)} &middot; Chapter ${notesState.chapterIndex + 1} &middot; ${chapter.title}</div>
     <h3>${card.heading}</h3>
-    ${renderRunChart(mod.cards.length, notesState.cardIndex)}
+    ${renderRunChart(chapter.cards.length, notesState.cardIndex)}
     <div class="note-content">${card.html}</div>
     <div class="note-nav">
-      <button class="btn btn-ghost" id="prev-card-btn" ${ (notesState.cardIndex===0 && notesState.moduleIndex===0) ? 'disabled' : '' }>&larr; Back</button>
-      <div class="step-indicator">Topic ${notesState.cardIndex + 1} of ${mod.cards.length}</div>
+      <button class="btn btn-ghost" id="prev-card-btn" ${ (notesState.cardIndex===0 && notesState.chapterIndex===0) ? 'disabled' : '' }>&larr; Back</button>
+      <div class="step-indicator">Topic ${notesState.cardIndex + 1} of ${chapter.cards.length}</div>
       <button class="btn btn-primary" id="next-card-btn">${nextLabel}</button>
     </div>
   `;
 
-  document.getElementById('prev-card-btn').onclick = prevCard;
+  document.getElementById('prev-card-btn').onclick = () => prevCard(cm);
   document.getElementById('next-card-btn').onclick = () => {
-    if (isLastCardOfModule){
-      const wasAlreadyDone = progress[mod.id].notesDone;
-      progress[mod.id].notesDone = true;
+    if (isVeryLastCard){
+      const wasAlreadyDone = getProgress(cm.id).notesDone;
+      getProgress(cm.id).notesDone = true;
       if (hasExam && !wasAlreadyDone){
-        showModuleFinishedPrompt(mod);
+        showModuleFinishedPrompt(cm);
         return;
       }
     }
-    nextCard();
+    nextCard(cm);
   };
 
-  renderModuleList();
+  renderModuleList(cm);
 }
 
-function showModuleFinishedPrompt(mod){
+function showModuleFinishedPrompt(cm){
   const panel = document.getElementById('note-panel');
   panel.innerHTML = `
     <div class="module-finished">
       <div class="icon">&#127881;</div>
-      <h3>Module ${NOTES_MODULES.indexOf(mod) + 1} notes complete</h3>
-      <p>You've worked through every topic in &ldquo;${mod.title}.&rdquo; Take the Exam Quiz for this module now to lock in what you've learned, or keep browsing the notes.</p>
+      <h3>${courseModuleLabel(cm)} notes complete</h3>
+      <p>You've worked through every chapter in this module. Take the Exam Quiz now to lock in what you've learned, or keep browsing the notes.</p>
       <div class="module-finished-actions">
         <button class="btn btn-primary" id="goto-exam-btn">Take the Exam Quiz &rarr;</button>
         <button class="btn btn-ghost" id="keep-reading-btn">Keep reading notes</button>
       </div>
     </div>
   `;
-  document.getElementById('goto-exam-btn').onclick = () => startExam(mod.id);
-  document.getElementById('keep-reading-btn').onclick = () => { nextCard(); };
-  renderModuleList();
+  document.getElementById('goto-exam-btn').onclick = () => startExam(cm);
+  document.getElementById('keep-reading-btn').onclick = () => { renderNoteCard(cm); };
+  renderModuleList(cm);
 }
 
-function nextCard(){
-  const mod = NOTES_MODULES[notesState.moduleIndex];
-  if (notesState.cardIndex < mod.cards.length - 1){
+function nextCard(cm){
+  const chapters = chaptersFor(cm);
+  const chapter = chapters[notesState.chapterIndex];
+  if (notesState.cardIndex < chapter.cards.length - 1){
     notesState.cardIndex++;
-  } else if (notesState.moduleIndex < NOTES_MODULES.length - 1){
-    notesState.moduleIndex++;
+  } else if (notesState.chapterIndex < chapters.length - 1){
+    notesState.chapterIndex++;
     notesState.cardIndex = 0;
   }
-  renderNoteCard();
+  renderNoteCard(cm);
 }
 
-function prevCard(){
+function prevCard(cm){
+  const chapters = chaptersFor(cm);
   if (notesState.cardIndex > 0){
     notesState.cardIndex--;
-  } else if (notesState.moduleIndex > 0){
-    notesState.moduleIndex--;
-    notesState.cardIndex = NOTES_MODULES[notesState.moduleIndex].cards.length - 1;
+  } else if (notesState.chapterIndex > 0){
+    notesState.chapterIndex--;
+    notesState.cardIndex = chapters[notesState.chapterIndex].cards.length - 1;
   }
-  renderNoteCard();
+  renderNoteCard(cm);
 }
 
 // ================================================================
-// QUIZ
+// PRACTICE QUIZ
 // ================================================================
 const quizState = {
-  categoryName: null,   // null = full exam
+  categoryName: null,   // null = full module set
   questions: [],
   index: 0,
   score: 0,
   answers: [],          // {selected: idx, correct: bool}
 };
 
-function renderCategoryGrid(){
+function renderCategoryGrid(cm){
   const grid = document.getElementById('category-grid');
   grid.innerHTML = '';
+  const allQs = practiceQuestionsFor(cm);
+  const cats = practiceCategoriesFor(cm);
 
   const allCard = document.createElement('div');
   allCard.className = 'cat-card all';
   allCard.innerHTML = `
     <div>
-      <h4>&#127919; Full Practice Exam</h4>
-      <div class="count">${QUIZ_QUESTIONS.length} questions &middot; all categories, in order</div>
+      <h4>&#127919; ${courseModuleLabel(cm)} Practice Question Set</h4>
+      <div class="count">${allQs.length} questions &middot; all categories, in order</div>
     </div>
     <div class="icon">&#9656;</div>
   `;
-  allCard.onclick = () => startQuiz(null);
+  allCard.onclick = () => startQuiz(cm, null);
   grid.appendChild(allCard);
 
-  QUIZ_CATEGORIES.forEach(cat => {
+  cats.forEach(cat => {
     const card = document.createElement('div');
     card.className = 'cat-card';
     card.innerHTML = `
@@ -238,26 +347,29 @@ function renderCategoryGrid(){
       <h4>${cat.short}</h4>
       <div class="count">${cat.count} questions</div>
     `;
-    card.onclick = () => startQuiz(cat.name);
+    card.onclick = () => startQuiz(cm, cat.name);
     grid.appendChild(card);
   });
 }
 
-function startQuiz(categoryName){
+function startQuiz(cm, categoryName){
+  quizState.scopeModuleId = cm.id;
   quizState.categoryName = categoryName;
+  const pool = practiceQuestionsFor(cm);
   quizState.questions = categoryName
-    ? QUIZ_QUESTIONS.filter(q => q.category === categoryName)
-    : QUIZ_QUESTIONS.slice();
+    ? pool.filter(q => q.category === categoryName)
+    : pool;
   quizState.index = 0;
   quizState.score = 0;
   quizState.answers = [];
   showView('view-quiz-play');
-  document.getElementById('nav-quiz').classList.add('active');
+  document.getElementById('tab-quiz').classList.add('active');
   renderQuestion();
 }
 
 function currentCategoryLabel(){
-  if (!quizState.categoryName) return 'Full Practice Exam';
+  const cm = activeModule();
+  if (!quizState.categoryName) return courseModuleLabel(cm) + ' \u2014 Full Set';
   const cat = QUIZ_CATEGORIES.find(c => c.name === quizState.categoryName);
   return cat ? cat.short : quizState.categoryName;
 }
@@ -333,7 +445,7 @@ function nextQuestion(){
 
 function showResults(){
   showView('view-quiz-results');
-  document.getElementById('nav-quiz').classList.add('active');
+  document.getElementById('tab-quiz').classList.add('active');
 
   const total = quizState.questions.length;
   const score = quizState.score;
@@ -345,11 +457,10 @@ function showResults(){
   let verdict;
   if (pct >= 85) verdict = "Excellent \u2014 you're exam-ready on this set.";
   else if (pct >= 70) verdict = "Solid grasp \u2014 review the missed items below and try again.";
-  else if (pct >= 50) verdict = "Getting there \u2014 revisit the related study-note modules before retaking.";
+  else if (pct >= 50) verdict = "Getting there \u2014 revisit the related study-note chapters before retaking.";
   else verdict = "This set needs more review \u2014 work through the study notes, then retake.";
   document.getElementById('results-verdict').textContent = verdict;
 
-  // Breakdown by category (only meaningful for full exam, but show for any set)
   const breakdown = document.getElementById('results-breakdown');
   const byCat = {};
   quizState.questions.forEach((q, i) => {
@@ -369,7 +480,6 @@ function showResults(){
     `;
   }).join('');
 
-  // Review list — missed questions
   const reviewList = document.getElementById('review-list');
   const letters = ['A','B','C','D'];
   const missed = quizState.questions
@@ -389,7 +499,7 @@ function showResults(){
       `).join('');
   }
 
-  document.getElementById('retake-btn').onclick = () => startQuiz(quizState.categoryName);
+  document.getElementById('retake-btn').onclick = () => startQuiz(activeModule(), quizState.categoryName);
 }
 
 function renderGauge(pct){
@@ -413,80 +523,37 @@ function renderGauge(pct){
 }
 
 // ================================================================
-// EXAM QUIZ — one gated, scored sitting per module
+// EXAM QUIZ — one gated, scored sitting per course module
 // ================================================================
 const examState = {
-  moduleId: null,
+  courseModuleId: null,
   questions: [],
   index: 0,
   score: 0,
   answers: [],
 };
 
-function renderExamModuleGrid(){
-  const grid = document.getElementById('exam-module-grid');
-  grid.innerHTML = '';
-
-  NOTES_MODULES.forEach((mod, idx) => {
-    const bank = EXAM_BANKS[mod.id];
-    const card = document.createElement('div');
-    const p = progress[mod.id];
-
-    if (!bank){
-      card.className = 'cat-card disabled';
-      card.innerHTML = `
-        <span class="icon">&#128274;</span>
-        <h4>Module ${idx + 1}: ${mod.title}</h4>
-        <div class="count">Exam quiz coming soon</div>
-      `;
-      grid.appendChild(card);
-      return;
-    }
-
-    let statusLine = `${bank.length} questions &middot; pass at ${EXAM_PASS_PCT}%`;
-    let icon = '&#127919;';
-    if (p.examPassed){
-      statusLine = `Passed &middot; best score ${p.examBestPct}%`;
-      icon = '&#9989;';
-    } else if (!p.notesDone){
-      statusLine = `Finish the study notes first &middot; ${bank.length} questions`;
-      icon = '&#128214;';
-    }
-
-    card.className = 'cat-card' + (p.examPassed ? ' passed' : '');
-    card.innerHTML = `
-      <span class="icon">${icon}</span>
-      <h4>Module ${idx + 1}: ${mod.title}</h4>
-      <div class="count">${statusLine}</div>
-    `;
-    card.onclick = () => startExam(mod.id);
-    grid.appendChild(card);
-  });
-}
-
-function startExam(moduleId){
-  const bank = EXAM_BANKS[moduleId];
-  if (!bank) return;
-  examState.moduleId = moduleId;
+function startExam(cm){
+  const bank = EXAM_BANKS[cm.examBankKey];
+  if (!bank){
+    return;
+  }
+  examState.courseModuleId = cm.id;
   examState.questions = bank.slice();
   examState.index = 0;
   examState.score = 0;
   examState.answers = [];
   showView('view-exam-play');
-  document.getElementById('nav-exam').classList.add('active');
+  document.getElementById('tab-exam').classList.add('active');
   renderExamQuestion();
 }
 
-function currentExamModuleTitle(){
-  const mod = NOTES_MODULES.find(m => m.id === examState.moduleId);
-  return mod ? `Module ${NOTES_MODULES.indexOf(mod) + 1} Exam &middot; ${mod.title}` : 'Exam Quiz';
-}
-
 function renderExamQuestion(){
+  const cm = COURSE_MODULES.find(m => m.id === examState.courseModuleId);
   const q = examState.questions[examState.index];
   const total = examState.questions.length;
 
-  document.getElementById('exam-cat-label').textContent = currentExamModuleTitle();
+  document.getElementById('exam-cat-label').textContent = courseModuleLabel(cm) + ' Exam';
   document.getElementById('exam-bar').style.width = (((examState.index) / total) * 100) + '%';
   document.getElementById('exam-score-pill').textContent = `Score: ${examState.score} / ${examState.index}`;
 
@@ -553,22 +620,22 @@ function nextExamQuestion(){
 
 function showExamResults(){
   showView('view-exam-results');
-  document.getElementById('nav-exam').classList.add('active');
+  document.getElementById('tab-exam').classList.add('active');
 
+  const cm = COURSE_MODULES.find(m => m.id === examState.courseModuleId);
   const total = examState.questions.length;
   const score = examState.score;
   const pct = Math.round((score / total) * 100);
   const passed = pct >= EXAM_PASS_PCT;
-  const mod = NOTES_MODULES.find(m => m.id === examState.moduleId);
 
-  const p = progress[examState.moduleId];
+  const p = getProgress(cm.id);
   if (p.examBestPct === null || pct > p.examBestPct) p.examBestPct = pct;
   if (passed) p.examPassed = true;
 
   document.getElementById('exam-gauge-wrap').innerHTML = renderGauge(pct);
   document.getElementById('exam-results-heading').textContent = `${score} / ${total} correct`;
   document.getElementById('exam-pass-badge').innerHTML = passed
-    ? `<div class="pass-badge pass">&#9989; Passed &mdash; Module ${NOTES_MODULES.indexOf(mod)+1} complete</div>`
+    ? `<div class="pass-badge pass">&#9989; Passed &mdash; ${courseModuleLabel(cm)} complete</div>`
     : `<div class="pass-badge fail">Not yet at ${EXAM_PASS_PCT}% &mdash; give it another pass</div>`;
 
   let verdict;
@@ -615,7 +682,7 @@ function showExamResults(){
       `).join('');
   }
 
-  document.getElementById('exam-retake-btn').onclick = () => startExam(examState.moduleId);
+  document.getElementById('exam-retake-btn').onclick = () => startExam(cm);
 }
 
 // ---------------- Init ----------------
