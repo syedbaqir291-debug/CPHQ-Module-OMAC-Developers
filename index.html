@@ -13,7 +13,7 @@
 
 <header class="topbar">
   <div class="brand" onclick="goHome()">
-    <div class="mark">💡</div>
+    <div class="mark">Q</div>
     <div>
       <h1>CPHQ Session by Dr. Shama Zakir Khan</h1>
       <div class="subtitle">Session 1 &middot; Introduction to Quality &amp; Important Concepts</div>
@@ -23,6 +23,7 @@
     <button id="nav-home" onclick="goHome()">Home</button>
     <button id="nav-notes" onclick="goNotes()">Study Notes</button>
     <button id="nav-quiz" onclick="goQuizHome()">Practice Quiz</button>
+    <button id="nav-exam" onclick="goExamHome()">Exam Quiz</button>
   </nav>
 </header>
 
@@ -33,7 +34,7 @@
     <div class="hero">
       <div class="eyebrow">CPHQ Exam Preparation &middot; Session 1</div>
       <h2>Introduction to Quality &amp; Important Concepts</h2>
-      <p>Work through eight modules of educational notes heading-by-heading, then test what you've learned with an 82-question scored practice quiz &mdash; complete with explanations for every answer.</p>
+      <p>Work through eight modules of educational notes heading-by-heading, then prove what you've learned with each module's Exam Quiz, or warm up anytime with the open-ended Practice Quiz.</p>
     </div>
 
     <div class="home-grid">
@@ -42,6 +43,12 @@
         <h3>Study Notes</h3>
         <p>8 modules covering CPHQ certification, quality concepts, systems thinking, Donabedian, PDSA, SMART aims, and more &mdash; cross-referenced to HQ Solutions, 5th Edition.</p>
         <div class="cta">Start reading <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="home-card exam" onclick="goExamHome()">
+        <div class="icon">&#127919;</div>
+        <h3>Exam Quiz</h3>
+        <p>One scored sitting per module &mdash; complete the study notes first, then pass the module's exam quiz (70%+) before moving on. Tracks pass/fail per module.</p>
+        <div class="cta">View modules <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
       </div>
       <div class="home-card quiz" onclick="goQuizHome()">
         <div class="icon">&#128221;</div>
@@ -98,6 +105,46 @@
         <button class="btn btn-ghost" onclick="goQuizHome()">Choose another category</button>
       </div>
       <div class="review-list" id="review-list"></div>
+    </div>
+  </section>
+  <!-- ================= EXAM HOME VIEW ================= -->
+  <section id="view-exam-home" class="view">
+    <div class="quiz-intro">
+      <div class="section-label">Exam Quiz</div>
+      <h2 style="font-family:var(--serif); color:var(--navy); margin:6px 0 10px;">Choose a module to test</h2>
+      <p style="color:var(--ink-soft); max-width:600px; margin:0 auto;">Each module has its own one-sitting exam quiz, built from a separate question bank to the Practice Quiz. Finish the study notes for a module first, then pass its exam (70%+) to mark that module complete.</p>
+    </div>
+    <div class="category-grid" id="exam-module-grid"></div>
+  </section>
+
+  <!-- ================= EXAM PLAY VIEW ================= -->
+  <section id="view-exam-play" class="view">
+    <div class="back-link" onclick="goExamHome()">&larr; Choose a different module</div>
+    <div class="quiz-progress">
+      <div class="cat-label" id="exam-cat-label"></div>
+      <div class="bar"><div class="bar-fill" id="exam-bar"></div></div>
+      <div class="score-pill" id="exam-score-pill">Score: 0 / 0</div>
+    </div>
+    <div class="question-card" id="exam-question-card"></div>
+    <div class="quiz-footer-nav">
+      <button class="btn btn-primary" id="exam-next-btn" disabled onclick="nextExamQuestion()">Next Question &rarr;</button>
+    </div>
+  </section>
+
+  <!-- ================= EXAM RESULTS VIEW ================= -->
+  <section id="view-exam-results" class="view">
+    <div class="results">
+      <div class="section-label">Exam Result</div>
+      <div class="gauge-wrap" id="exam-gauge-wrap"></div>
+      <h2 id="exam-results-heading"></h2>
+      <div id="exam-pass-badge"></div>
+      <p class="verdict-line" id="exam-results-verdict"></p>
+      <div class="breakdown" id="exam-results-breakdown"></div>
+      <div class="results-actions">
+        <button class="btn btn-accent" id="exam-retake-btn">Retake this exam</button>
+        <button class="btn btn-ghost" onclick="goExamHome()">Choose another module</button>
+      </div>
+      <div class="review-list" id="exam-review-list"></div>
     </div>
   </section>
 
