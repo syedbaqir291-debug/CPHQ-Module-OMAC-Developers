@@ -2658,7 +2658,7 @@ const COURSE_MODULES = [
   {
     id: 'module1',
     title: 'Module 1',
-    name: null, // filled in once a name is shared; falls back to "Module 1"
+    name: 'CPHQ (OMAC)',
     blurb: 'Introduction to Quality & Important Concepts',
     noteChapterIds: ['m1','m2','m3','m4','m5','m6','m7','m8'],
     quizCategories: null, // null = use every category currently in QUIZ_CATEGORIES
