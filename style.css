@@ -153,7 +153,9 @@ main{
   gap:24px;
   margin-top:36px;
 }
+.home-grid.three{ grid-template-columns: repeat(3, 1fr); }
 @media (max-width: 760px){ .home-grid{ grid-template-columns:1fr; } }
+@media (max-width: 960px){ .home-grid.three{ grid-template-columns:1fr; } }
 
 .home-card{
   background: var(--paper-card);
@@ -176,6 +178,7 @@ main{
 }
 .home-card.notes .icon{ background: rgba(26,166,160,0.14); color: var(--teal-deep); }
 .home-card.quiz .icon{ background: rgba(232,163,61,0.16); color:#B5791A; }
+.home-card.exam .icon{ background: rgba(16,42,67,0.08); color: var(--navy); }
 .home-card h3{
   font-family:var(--serif);
   font-size:1.4rem;
@@ -192,8 +195,50 @@ main{
   display:flex; align-items:center; gap:6px;
 }
 .home-card.quiz .cta{ color:#B5791A; }
+.home-card.exam .cta{ color: var(--navy); }
 .home-card .cta svg{ width:14px; height:14px; transition: transform .15s ease; }
 .home-card:hover .cta svg{ transform: translateX(4px); }
+
+/* ---------- Top-level module list (Home view) ---------- */
+.module-card-grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:22px;
+  margin-top:36px;
+}
+@media (max-width: 760px){ .module-card-grid{ grid-template-columns:1fr; } }
+.module-card{
+  background: var(--paper-card);
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px 26px;
+  cursor:pointer;
+  box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.module-card:hover{ transform: translateY(-4px); box-shadow: 0 18px 40px -14px rgba(16,42,67,0.32); border-color: var(--teal); }
+.module-card-eyebrow{
+  font-family:var(--mono);
+  font-size:0.74rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color: var(--teal-deep);
+  margin-bottom:8px;
+}
+.module-card h3{ font-family:var(--serif); font-size:1.45rem; color:var(--navy); margin:0 0 8px; }
+.module-card p{ color: var(--ink-soft); font-size:0.94rem; margin:0 0 12px; }
+.module-card-meta{ font-family:var(--mono); font-size:0.74rem; color: var(--ink-soft); margin-bottom:10px; }
+.module-card .cta{
+  font-family:var(--mono);
+  font-size:0.78rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color: var(--teal-deep);
+  display:flex; align-items:center; gap:6px;
+  margin-top:12px;
+}
+.module-card .cta svg{ width:14px; height:14px; transition: transform .15s ease; }
+.module-card:hover .cta svg{ transform: translateX(4px); }
 
 /* ---------- Run-chart strip (decorative + progress) ---------- */
 .runchart{
