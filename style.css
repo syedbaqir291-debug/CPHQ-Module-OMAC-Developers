@@ -357,6 +357,52 @@ main{
   color: var(--ink-soft);
 }
 
+/* module list badges */
+.mod-badge{
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:0.68rem;
+  letter-spacing:0.04em;
+  padding:3px 9px;
+  border-radius:999px;
+  margin-top:8px;
+}
+.mod-badge.pass{ background: var(--good-bg); color: var(--good); }
+.mod-badge.ready{ background: rgba(232,163,61,0.18); color:#B5791A; }
+.mod-badge.done{ background: rgba(26,166,160,0.14); color: var(--teal-deep); }
+
+/* module finished prompt (shown in note panel) */
+.module-finished{
+  text-align:center;
+  padding: 50px 20px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.module-finished .icon{ font-size:2.6rem; margin-bottom:10px; }
+.module-finished h3{ font-family:var(--serif); color:var(--navy); margin:0 0 10px; }
+.module-finished p{ color: var(--ink-soft); max-width:480px; margin:0 0 22px; }
+.module-finished-actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+
+/* exam module cards: disabled / passed states */
+.cat-card.disabled{ opacity:0.55; cursor:not-allowed; }
+.cat-card.disabled:hover{ transform:none; border-color: var(--line); }
+.cat-card.passed{ border-color: var(--good); background: var(--good-bg); }
+
+.pass-badge{
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:0.8rem;
+  font-weight:700;
+  padding:6px 16px;
+  border-radius:999px;
+  margin: 4px 0 14px;
+}
+.pass-badge.pass{ background: var(--good-bg); color: var(--good); }
+.pass-badge.fail{ background: var(--bad-bg); color: var(--bad); }
+
 /* ---------- Buttons ---------- */
 .btn{
   font-family:var(--sans);
