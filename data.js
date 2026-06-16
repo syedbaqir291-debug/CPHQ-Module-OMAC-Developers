@@ -1948,4 +1948,700 @@ const QUIZ_QUESTIONS = [
   "explanation": "To improve pay-for-performance, the first step is to review the provider\u2019s current performance data and gaps.",
   "correct": 0
  }
-];
+];// Exam Quiz question bank, keyed by NOTES_MODULES id.
+// Completing the exam for a module (score >= pass threshold) unlocks the next module in the sidebar.
+const EXAM_BANKS = {
+  m1: [
+  {
+    "num": 1,
+    "category": "Strategic planning, leadership, culture and QI alignment",
+    "question": "When a CEO directs a quality improvement council to develop objectives for a goal, the council must ensure that they:",
+    "options": [
+      "State the end result or desired outcome.",
+      "Tie the objectives to the organization's financial performance.",
+      "Use the Plan-Do-Study-Act cycle of continuous improvement.",
+      "Keep the objectives specific to the short term."
+    ],
+    "correct": 0,
+    "explanation": "Effective objectives must be outcome-oriented, clearly stating the desired end result to ensure measurement and accountability."
+  },
+  {
+    "num": 2,
+    "category": "Strategic planning, leadership, culture and QI alignment",
+    "question": "Staff struggling with a transition to new values after a merger most likely indicates a:",
+    "options": [
+      "Incomplete data integration.",
+      "Staff transition program training incomplete.",
+      "Lack of buy-in of the new mission and vision.",
+      "Continued support of both mission statements."
+    ],
+    "correct": 2,
+    "explanation": "Successful cultural transitions require belief and 'buy-in' from the staff regarding the new mission and vision of the merged entity."
+  },
+  {
+    "num": 3,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "Care that does not vary in quality because of personal characteristics such as gender or ethnicity is defined as:",
+    "options": [
+      "Efficient",
+      "Equitable",
+      "Effective",
+      "Evidence-based"
+    ],
+    "correct": 1,
+    "explanation": "Equity is one of the six domains of quality defined by the IOM (STEEEP), referring to the delivery of fair and impartial care."
+  },
+  {
+    "num": 4,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "Which question demonstrates a culture of safety during a daily briefing?",
+    "options": [
+      "'Do we have available beds in the ICU?'",
+      "'Did anything happen last night that could lead to a central line infection?'",
+      "'Who is the last person that committed a medication error?'",
+      "'What was the patient's intake and output?'"
+    ],
+    "correct": 1,
+    "explanation": "Focusing on potential risks and systems (proactive) rather than blaming individuals (punitive) characterizes a safety culture."
+  },
+  {
+    "num": 5,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "To assess a facility's patient safety culture, who should be surveyed?",
+    "options": [
+      "All staff and physicians",
+      "All patients and their families",
+      "A stratified sample of physicians and nurses",
+      "A random sample of leaders and staff"
+    ],
+    "correct": 0,
+    "explanation": "Safety culture involves every individual in the organization, so surveying all staff and physicians provides the most comprehensive view."
+  },
+  {
+    "num": 6,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "When errors occur despite appropriate processes, leaders should focus on:",
+    "options": [
+      "Staff complaints.",
+      "Patient satisfaction.",
+      "Time constraints.",
+      "Human factors."
+    ],
+    "correct": 3,
+    "explanation": "Human factors engineering looks at how humans interact with systems and how to design those systems to minimize human error."
+  },
+  {
+    "num": 7,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "A patient was accidentally given two doses of a sedating agent that had not been ordered. Which technology would have best helped prevent this specific error?",
+    "options": [
+      "Automated dispensing machine (ADM)",
+      "Radio frequency identification (RFID)",
+      "Barcode medication administration (BCMA)",
+      "Computerized provider order entry (CPOE)"
+    ],
+    "correct": 2,
+    "explanation": "Barcode medication administration (BCMA) ensures the 'five rights' at the bedside, preventing the administration of medications that are not ordered or have already been given."
+  },
+  {
+    "num": 8,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "A nurse discovers an IV error before starting the infusion. The quality professional should:",
+    "options": [
+      "Encourage the nurse to report the near-miss.",
+      "Recommend additional safety training.",
+      "Perform no action as no harm occurred.",
+      "Report the nurse to the manager."
+    ],
+    "correct": 0,
+    "explanation": "Near-miss reporting is vital for identifying system vulnerabilities before they reach a patient and cause harm."
+  },
+  {
+    "num": 9,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "Which response by leadership best demonstrates a safety culture regarding a rise in patient falls?",
+    "options": [
+      "Acknowledge the injuries as systems errors.",
+      "Hold the unit manager responsible.",
+      "Require training of involved staff.",
+      "Place involved staff on a corrective plan."
+    ],
+    "correct": 0,
+    "explanation": "A safety culture prioritizes systems thinking over individual blame, recognizing that most errors are caused by flawed system designs."
+  },
+  {
+    "num": 10,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "Based on adult learning principles, a facilitation training session is most effective when:",
+    "options": [
+      "Participants study techniques after class.",
+      "Participants practice facilitation during class.",
+      "Concepts are taught and tested at the end.",
+      "Handouts are provided for later reference."
+    ],
+    "correct": 1,
+    "explanation": "Adults learn best through active participation and the immediate application of new skills."
+  },
+  {
+    "num": 11,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "To gain employee support for a customer service change, a manager should first:",
+    "options": [
+      "Include service in performance reviews.",
+      "Demonstrate the need for change.",
+      "Seek authorization from the board.",
+      "Empower the employees."
+    ],
+    "correct": 1,
+    "explanation": "According to change management models (like Kotter's), establishing a sense of urgency or 'need for change' is the necessary first step."
+  },
+  {
+    "num": 12,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "Effective learning in a 'learning organization' is best exemplified by:",
+    "options": [
+      "Taking a posttest after reading a bulletin.",
+      "Auditing staff performance after training.",
+      "Watching a video on patient admission.",
+      "Using root cause analysis results to change processes."
+    ],
+    "correct": 3,
+    "explanation": "A learning organization uses information from failures and analysis to actively transform processes and improve safety."
+  },
+  {
+    "num": 13,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "Which approach is best for facilitating acceptance of a major change in a billing process?",
+    "options": [
+      "Immediate implementation",
+      "Medical staff education",
+      "A pilot project",
+      "Long-range planning"
+    ],
+    "correct": 2,
+    "explanation": "Piloting allows for testing a change on a small scale, reducing risk and allowing staff to see the benefits before a full rollout."
+  },
+  {
+    "num": 14,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "When a team is frustrated because they don't know what they are supposed to accomplish, what should be explored first?",
+    "options": [
+      "Clarity of team goals",
+      "Effectiveness of the team leader",
+      "Clarity of team roles",
+      "Effectiveness of the facilitator"
+    ],
+    "correct": 0,
+    "explanation": "A team cannot function without a clear aim or charter; goal clarity is the foundation of team effectiveness."
+  },
+  {
+    "num": 15,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "According to adult learning principles, what is the first step in preparing a presentation on documentation?",
+    "options": [
+      "Determine the audience's knowledge and expectations",
+      "Develop an evaluation tool",
+      "Present an inservice for the staff",
+      "Obtain administrative support"
+    ],
+    "correct": 0,
+    "explanation": "Understanding the baseline knowledge and needs of the audience ensures the training is relevant and effective."
+  },
+  {
+    "num": 16,
+    "category": "QI tools, pioneers, variation, PDSA and IHI Model for Improvement",
+    "question": "Which tool best demonstrates length-of-stay (LOS) data over a period?",
+    "options": [
+      "Gantt chart",
+      "Pareto chart",
+      "Flowchart",
+      "Run chart"
+    ],
+    "correct": 3,
+    "explanation": "A run chart is ideal for showing continuous data like LOS over time to identify trends or shifts."
+  },
+  {
+    "num": 17,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "A quality professional assisting a team with data analysis should enhance the team's understanding by:",
+    "options": [
+      "Directing the team to collect as much data as possible.",
+      "Collecting all raw data collection tools.",
+      "Publishing raw data in tables.",
+      "Using visual, graphical methods to present the data."
+    ],
+    "correct": 3,
+    "explanation": "Visualizations like charts and graphs make patterns and trends easier for team members to understand compared to raw data tables."
+  },
+  {
+    "num": 18,
+    "category": "IDS, value-based care, managed care and access",
+    "question": "To improve population health by reducing readmission rates, which is most important?",
+    "options": [
+      "Transition of care programs",
+      "Local resource directory",
+      "Creation of disease registries",
+      "Health information exchange"
+    ],
+    "correct": 0,
+    "explanation": "Effective transition of care (discharge planning, follow-up) is the primary mechanism for preventing avoidable hospital readmissions."
+  },
+  {
+    "num": 19,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "Which phase of the change process involves the most energy and is critical for influencing peers?",
+    "options": [
+      "Investing in staff who can influence peers",
+      "Progressive discipline",
+      "Delayed implementation",
+      "Emphasizing non-compliance consequences"
+    ],
+    "correct": 0,
+    "explanation": "In change management, leveraging early adopters and 'opinion leaders' is the most effective way to diffuse change through an organization."
+  },
+  {
+    "num": 20,
+    "category": "Strategic planning, leadership, culture and QI alignment",
+    "question": "A local health plan staff continues to struggle with the transition to new organizational values one year after being acquired. What is the most likely explanation?",
+    "options": [
+      "Incomplete data integration.",
+      "Staff transition program training is incomplete.",
+      "Continued support of both mission statements.",
+      "Lack of buy-in of the new mission and vision."
+    ],
+    "correct": 3,
+    "explanation": "Cultural shifts and the adoption of new values require staff buy-in. Without commitment to the new mission and vision, the transition will be met with resistance or confusion."
+  },
+  {
+    "num": 21,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "A healthcare organization's heart failure admission rate dropped from 16% to 12% following an initiative. What is the most applicable action based on this performance?",
+    "options": [
+      "Monitor the performance to ensure sustained improvement.",
+      "Discontinue the initiative to eliminate waste.",
+      "Expand the initiative to other diseases.",
+      "Shift resources to start another initiative."
+    ],
+    "correct": 0,
+    "explanation": "Achieving a target is not enough; the quality professional must ensure that the improvements are sustained through ongoing monitoring before considering the project 'finished'."
+  },
+  {
+    "num": 22,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "What is the best method to achieve a significant reduction in medical errors within a healthcare organization?",
+    "options": [
+      "Establish disciplinary measures for clinical practitioners who commit errors",
+      "Encourage patients, families, and staff to report actual and potential errors",
+      "Counsel employees to be more careful when providing care",
+      "Change the process for reporting medical errors within the organization"
+    ],
+    "correct": 1,
+    "explanation": "Reporting near-misses and actual errors provides the data necessary to identify system failures. A culture of reporting is essential for systemic safety improvements."
+  },
+  {
+    "num": 23,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "A hospital leadership's initial reaction to medication errors is to counsel nurses, but the quality team finds systemic contributing factors. Which action best reflects systems thinking?",
+    "options": [
+      "Ask pharmacy staff to work faster during peak hours to reduce delays.",
+      "Provide disciplinary action to nurses who failed to administer antibiotics on time.",
+      "Send a reminder memo to all nursing staff about timely administration.",
+      "Analyze the full medication-use process and identify interdependent workflow gaps."
+    ],
+    "correct": 3,
+    "explanation": "Systems thinking involves evaluating how different parts of the organization interact and redesigning processes to prevent errors rather than focusing on individual blame."
+  },
+  {
+    "num": 24,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "Which team composition provides the best mix of high-level support and frontline engagement for an ED-to-inpatient flow project?",
+    "options": [
+      "Housekeeping supervisor as process owner and quality professional as team leader",
+      "Inpatient unit manager as team facilitator and ED manager as project sponsor",
+      "Staff nurse ED as champion and CNO as project sponsor",
+      "Staff nurse inpatient unit as facilitator and quality professional as champion"
+    ],
+    "correct": 2,
+    "explanation": "The CNO (Chief Nursing Officer) provides executive sponsorship while a staff nurse champion ensures buy-in from those performing the work."
+  },
+  {
+    "num": 25,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "What is the primary purpose of a Diagnosis-Related Group (DRG)?",
+    "options": [
+      "To identify the specific ICD-10 code for a disease",
+      "To track the number of outpatient visits per month",
+      "To determine hospital payment packages based on case complexity",
+      "To provide a medical diagnosis for individual patients"
+    ],
+    "correct": 2,
+    "explanation": "DRGs are used to group hospital cases into payment categories based on diagnosis, complexity, and resource use."
+  },
+  {
+    "num": 26,
+    "category": "QI tools, pioneers, variation, PDSA and IHI Model for Improvement",
+    "question": "According to the IHI Model for Improvement, what are the three fundamental questions?",
+    "options": [
+      "Who is involved? What is the cost? When will it end?",
+      "Is it Specific? Is it Measurable? Is it Achievable?",
+      "What are we trying to accomplish? How will we know that a change is an improvement? What change can we make that will result in improvement?",
+      "What is the plan? How do we do it? When do we study it?"
+    ],
+    "correct": 2,
+    "explanation": "These are the three foundational questions of the IHI Model for Improvement, used before starting the PDSA cycles."
+  },
+  {
+    "num": 27,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "Which measure is used to ensure that improving one part of a system does not cause a negative impact in another part?",
+    "options": [
+      "Balancing measure",
+      "Outcome measure",
+      "Structural measure",
+      "Process measure"
+    ],
+    "correct": 0,
+    "explanation": "Balancing measures look at the system as a whole to ensure that improvements in one area (e.g., reducing length of stay) don't degrade another (e.g., increasing readmission rates)."
+  },
+  {
+    "num": 28,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "A review of the timeliness of high-risk screening for diabetes addresses which of the following focuses?",
+    "options": [
+      "Outcome of care",
+      "Balancing measures",
+      "Structural capacity",
+      "Process of care"
+    ],
+    "correct": 3,
+    "explanation": "According to slide 60, timeliness of screening is a process of care focus because it evaluates whether a care activity was performed correctly at the right time rather than evaluating the clinical result (outcome)."
+  },
+  {
+    "num": 29,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "If a healthcare process consists of five steps with individual reliabilities of 99%, 95%, 95%, 90%, and 93%, what is the approximate reliability of the entire process?",
+    "options": [
+      "95%",
+      "90%",
+      "75%",
+      "85%"
+    ],
+    "correct": 2,
+    "explanation": "Based on slides 62 and 63, the overall reliability is calculated by multiplying the reliability of each step (0.99 x 0.95 x 0.95 x 0.90 x 0.93), which results in approximately 75%."
+  },
+  {
+    "num": 30,
+    "category": "Strategic planning, leadership, culture and QI alignment",
+    "question": "When assessing organizational culture and its impact on quality, the primary focus should be on:",
+    "options": [
+      "The annual budget allocated to quality departments",
+      "The hierarchy shown on the organizational chart",
+      "The number of policies written in the last year",
+      "Compliance with the mission and vision statements"
+    ],
+    "correct": 3,
+    "explanation": "Culture is reflected in whether daily behaviors and decisions align with the organization's mission and vision."
+  },
+  {
+    "num": 31,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "In systems thinking, leaders study patterns of behavior by examining:",
+    "options": [
+      "Isolated components and individual errors",
+      "Equipment maintenance logs only",
+      "Departmental silos and hierarchy charts",
+      "Interrelationships, decision patterns, and staff attitudes"
+    ],
+    "correct": 3,
+    "explanation": "Slide 148 notes that systems thinking focuses on interrelationships and how mental models or attitudes drive system behavior."
+  },
+  {
+    "num": 32,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "A quality professional wants to map internal customer relationships. Which question is most effective to ask employees?",
+    "options": [
+      "What is your job title?",
+      "Who is your direct supervisor?",
+      "Who in your workday do you serve?",
+      "How many patients do you see per day?"
+    ],
+    "correct": 2,
+    "explanation": "Asking 'Who do you serve?' identifies internal customers\u2014those who rely on an individual's work output within the organization."
+  },
+  {
+    "num": 33,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "Which of the following describes a 'Leading Measure'?",
+    "options": [
+      "The final outcome after a month is over",
+      "A check performed before the result happens to prevent problems",
+      "The total number of errors reported last year",
+      "The mortality rate for the previous quarter"
+    ],
+    "correct": 1,
+    "explanation": "A leading measure tracks actions or indicators that happen before the final result, allowing for intervention to ensure success."
+  },
+  {
+    "num": 34,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "What does the 'E' in STEEEP stand for when it refers to care that does not vary in quality because of personal characteristics?",
+    "options": [
+      "Effective",
+      "Efficient",
+      "Equitable",
+      "Evidence-based"
+    ],
+    "correct": 2,
+    "explanation": "Equitable care is one of the six dimensions of quality from the IOM, meaning care is provided regardless of gender, ethnicity, or socioeconomic status."
+  },
+  {
+    "num": 35,
+    "category": "QI tools, pioneers, variation, PDSA and IHI Model for Improvement",
+    "question": "In the PDSA cycle, what occurs during the 'Study' phase?",
+    "options": [
+      "Identify the problem and plan the change",
+      "Compare data to predictions and summarize learning",
+      "Implement the change hospital-wide",
+      "Carry out the test on a small scale"
+    ],
+    "correct": 1,
+    "explanation": "The 'Study' phase involves analyzing the results of the test and comparing them against the original predictions to see what was learned."
+  },
+  {
+    "num": 36,
+    "category": "QI tools, pioneers, variation, PDSA and IHI Model for Improvement",
+    "question": "Philip Crosby is best known for which quality philosophy?",
+    "options": [
+      "The Juran Trilogy",
+      "Zero Defects and 'Do it right the first time'",
+      "14 points for management",
+      "Statistical Process Control charts"
+    ],
+    "correct": 1,
+    "explanation": "Crosby championed 'Zero Defects' and the idea that quality is 'free' because doing things right the first time prevents scrap and rework costs."
+  },
+  {
+    "num": 37,
+    "category": "QI tools, pioneers, variation, PDSA and IHI Model for Improvement",
+    "question": "Which tool is used to visualize the root causes of a specific quality event?",
+    "options": [
+      "Run Chart",
+      "Control Chart",
+      "Histogram",
+      "Ishikawa Diagram"
+    ],
+    "correct": 3,
+    "explanation": "The Ishikawa (Fishbone) diagram is the standard tool for identifying and organizing potential root causes."
+  },
+  {
+    "num": 38,
+    "category": "QI tools, pioneers, variation, PDSA and IHI Model for Improvement",
+    "question": "A SMART Aim must be 'Time-bound.' What is the primary purpose of this?",
+    "options": [
+      "To ensure the project never ends",
+      "To reduce the cost of the project",
+      "To limit the number of staff involved",
+      "To create a sense of urgency and a defined timeline for evaluation"
+    ],
+    "correct": 3,
+    "explanation": "Being time-bound ensures there is a clear deadline to create urgency and a point at which the team evaluates success."
+  },
+  {
+    "num": 39,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "What is the key difference between a Clinical Audit and Quality Improvement (QI)?",
+    "options": [
+      "Audit generates new knowledge, while QI compares to targets.",
+      "QI is only for research purposes, while Audit is for practice.",
+      "Audit identifies gaps against a target, while QI tests interventions to close gaps.",
+      "There is no difference between the two."
+    ],
+    "correct": 2,
+    "explanation": "As shown in the slide examples, Clinical Audit identifies if a gap exists, whereas QI focuses on testing changes to improve performance."
+  },
+  {
+    "num": 40,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "Which type of Integrated Delivery System (IDS) integrates organizations at the same care level, such as multiple hospitals joining for resource sharing?",
+    "options": [
+      "Vertical IDS",
+      "Diagonal IDS",
+      "Horizontal IDS",
+      "Circular IDS"
+    ],
+    "correct": 2,
+    "explanation": "Horizontal integration occurs between similar organizations at the same level of care (e.g., a hospital chain)."
+  },
+  {
+    "num": 41,
+    "category": "Strategic planning, leadership, culture and QI alignment",
+    "question": "In the context of redesigning an organization, 'Paradigm Shift' refers to:",
+    "options": [
+      "Reducing the number of staff to save money",
+      "A fundamental change in how healthcare is delivered, such as moving from fee-for-service to value-based care",
+      "Merging two departments under one manager",
+      "Implementing a new electronic record system"
+    ],
+    "correct": 1,
+    "explanation": "A paradigm shift is a fundamental change in approach or underlying assumptions, as exemplified by the move to value-based care."
+  },
+  {
+    "num": 42,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "Which Donabedian measure is 'Percentage of surgical patients receiving prophylactic antibiotics on time'?",
+    "options": [
+      "Structure",
+      "Outcome",
+      "Process",
+      "Balancing"
+    ],
+    "correct": 2,
+    "explanation": "This measures whether a specific care action (giving antibiotics) was performed correctly according to protocol."
+  },
+  {
+    "num": 43,
+    "category": "QI tools, pioneers, variation, PDSA and IHI Model for Improvement",
+    "question": "The 'IHI Model for Improvement' emphasizes 'Iterative learning.' This is best represented by:",
+    "options": [
+      "One large-scale implementation",
+      "Writing a long project report at the end",
+      "Sequential PDSA cycles (ramps) building on each other",
+      "Conducting a single annual audit"
+    ],
+    "correct": 2,
+    "explanation": "Iterative learning means testing, studying, modifying, and testing again through sequential PDSA cycles."
+  },
+  {
+    "num": 44,
+    "category": "Strategic planning, leadership, culture and QI alignment",
+    "question": "According to the slide on 'Transition to Value-Based Healthcare,' the focus shifts from volume of services to:",
+    "options": [
+      "Number of billing codes used",
+      "Total revenue per admission",
+      "Patient outcomes and experience",
+      "Number of diagnostic tests performed"
+    ],
+    "correct": 2,
+    "explanation": "Value-based healthcare prioritizes patient outcomes, safety, and efficiency over the sheer number of procedures or visits."
+  },
+  {
+    "num": 45,
+    "category": "QI tools, pioneers, variation, PDSA and IHI Model for Improvement",
+    "question": "Which quality pioneer is known as the 'Father of Statistical Quality Control' and developed the PDCA cycle?",
+    "options": [
+      "Kaoru Ishikawa",
+      "W. Edwards Deming",
+      "Joseph Juran",
+      "Walter A. Shewhart"
+    ],
+    "correct": 3,
+    "explanation": "Shewhart developed Statistical Process Control and the original Plan-Do-Check-Act cycle in the 1920s."
+  },
+  {
+    "num": 46,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "Which type of Integrated Delivery System (IDS) involves integration across different levels of care, such as hospitals, clinics, labs, and home care?",
+    "options": [
+      "Horizontal IDS",
+      "Diagonal IDS",
+      "Parallel IDS",
+      "Vertical IDS"
+    ],
+    "correct": 3,
+    "explanation": "Slide 61 defines Vertical IDS as integration across different levels of care (e.g., hospital to home care), while Horizontal IDS is integration among similar organizations at the same care level."
+  },
+  {
+    "num": 47,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "In quality improvement, what does measuring 'all measures met' for a specific patient reflect?",
+    "options": [
+      "Step-level accuracy",
+      "Structural readiness",
+      "Individual staff performance",
+      "End-to-end reliability"
+    ],
+    "correct": 3,
+    "explanation": "Slide 64 states that measuring patients who had all measures met reflects end-to-end reliability, meaning the full process worked perfectly for that patient."
+  },
+  {
+    "num": 48,
+    "category": "Strategic planning, leadership, culture and QI alignment",
+    "question": "When assessing organizational culture and its impact on quality, a professional should primarily focus on whether daily practices are aligned with:",
+    "options": [
+      "The annual budget",
+      "Departmental silos",
+      "The mission and vision",
+      "Individual job descriptions"
+    ],
+    "correct": 2,
+    "explanation": "Slide 66 explains that if staff attitudes and behaviors match the mission (purpose) and vision (aspirations), it indicates a strong culture of quality."
+  },
+  {
+    "num": 49,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "Under the 'systems thinking' approach, which of the following should leaders study to understand system behavior and outcomes?",
+    "options": [
+      "Interrelationships and decision patterns",
+      "Isolated departmental budgets",
+      "Structural organization charts only",
+      "Bylaws and rules in isolation"
+    ],
+    "correct": 0,
+    "explanation": "Slide 67 notes that systems thinking involves studying how different parts interact, including interrelationships, decision patterns, and staff attitudes."
+  },
+  {
+    "num": 50,
+    "category": "Patient safety, non-punitive culture and systems thinking",
+    "question": "Which combination of tools is most effective for analyzing patterns of behavior over time and linking data with real-world context?",
+    "options": [
+      "Line graphs and storytelling",
+      "Pie charts and financial audits",
+      "Bar graphs and disciplinary records",
+      "Histograms and staff surveys"
+    ],
+    "correct": 0,
+    "explanation": "Slide 68 mentions that line graphs help visualize trends, while storytelling helps explain the 'why' behind those patterns."
+  },
+  {
+    "num": 51,
+    "category": "QI education, teamwork, change management and staff involvement",
+    "question": "To uncover internal customer relationships and service pathways, which question should a quality professional ask employees?",
+    "options": [
+      "Who is your direct supervisor?",
+      "Who in your workday do you serve?",
+      "What is your hourly rate?",
+      "When do you take your break?"
+    ],
+    "correct": 1,
+    "explanation": "Slide 69 explains that asking 'Who in your workday do you serve?' helps identify internal customer relationships and map service flows."
+  },
+  {
+    "num": 52,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "According to the analogy used in the training materials, a care process is similar to a chain in that:",
+    "options": [
+      "Each link is independent of the others",
+      "The first link determines the quality of the last",
+      "Adding more links increases the overall strength",
+      "The chain is only as reliable as its weakest step"
+    ],
+    "correct": 3,
+    "explanation": "Slide 65 uses the chain analogy to illustrate that even if most steps are strong, one failing step causes the entire process to fail."
+  },
+  {
+    "num": 53,
+    "category": "Quality, QI, value, Donabedian measures and STEEEP",
+    "question": "Why does overall process reliability typically drop below the reliability level of any single step in a multi-step healthcare process?",
+    "options": [
+      "Because step-level errors multiply across the process",
+      "Because the first step is always the most accurate",
+      "Because staff focus less on the final steps",
+      "Because documentation errors are not counted"
+    ],
+    "correct": 0,
+    "explanation": "Slide 62 explains that when multiple steps are linked, overall reliability drops because small weaknesses in each step multiply."
+  }
+],
+};
+
+const EXAM_PASS_PCT = 70;
