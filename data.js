@@ -2645,3 +2645,27 @@ const EXAM_BANKS = {
 };
 
 const EXAM_PASS_PCT = 70;
+
+// ============================================================
+// COURSE_MODULES — top-level course units (Module 1, Module 2, ...).
+// Each course module bundles: its Study Notes chapters (a slice of
+// NOTES_MODULES), its Practice Quiz question pool (a category filter
+// over QUIZ_QUESTIONS), and its Exam Quiz bank (a key into EXAM_BANKS).
+// Add a new entry here when a new module's content is dropped in —
+// nothing else needs to change structurally.
+// ============================================================
+const COURSE_MODULES = [
+  {
+    id: 'module1',
+    title: 'Module 1',
+    name: null, // filled in once a name is shared; falls back to "Module 1"
+    blurb: 'Introduction to Quality & Important Concepts',
+    noteChapterIds: ['m1','m2','m3','m4','m5','m6','m7','m8'],
+    quizCategories: null, // null = use every category currently in QUIZ_CATEGORIES
+    examBankKey: 'm1',
+  },
+];
+
+function courseModuleLabel(cm){
+  return cm.name ? `${cm.title}: ${cm.name}` : cm.title;
+}
